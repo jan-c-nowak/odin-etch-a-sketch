@@ -15,12 +15,21 @@ function generateSquareGrid(gridSideLength){
     for(let i=0; i < gridSideLength * gridSideLength; i++){
         let gridElement = document.createElement("div");
 
-        styleGridElement(gridElement,relativeGridElemWidth);
+        styleGridElement(gridElement, relativeGridElemWidth);
+        
+        
         
         container.appendChild(gridElement);
     }
 }
 
+function addClickEventListenerToContainer(container){
+    container.addEventListener('mouseover', (event) => {
+        if(event.target.classList.contains("container")) {return;}
+        event.target.style.backgroundColor = "gray";
+    });
+}
 
-
-generateSquareGrid(16);
+const container = document.querySelector(".container");
+addClickEventListenerToContainer(container);
+generateSquareGrid(32);
