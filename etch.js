@@ -10,7 +10,7 @@ function styleGridElement(gridElement, relativeGridElemWidth){
 
 function generateSquareGrid(gridSideLength){
     const container = document.querySelector(".container");
-    const relativeGridElemWidth = calculateGridElementSize(gridSideLength) - 0.2; //0.2 comes from grid-element 0.1% margin 
+    const relativeGridElemWidth = calculateGridElementSize(gridSideLength) - 0.16; //0.2 comes from grid-element 0.1% margin 
 
     for(let i=0; i < gridSideLength * gridSideLength; i++){
         let gridElement = document.createElement("div");
@@ -23,13 +23,50 @@ function generateSquareGrid(gridSideLength){
     }
 }
 
-function addClickEventListenerToContainer(container){
+function addMouseoverEventListenerToContainer(container){
     container.addEventListener('mouseover', (event) => {
         if(event.target.classList.contains("container")) {return;}
         event.target.style.backgroundColor = "gray";
     });
 }
 
+function deleteExistingGrid(){
+    const gridElements = document.querySelectorAll(".grid-element");
+    const container = document.querySelector(".container");
+    
+    gridElements.forEach((el) => {container.removeChild(el);});
+}
+
+function setNewGridSize(newSize){
+    deleteExistingGrid();
+    generateSquareGrid(newSize);
+}
+
+
+
+function buttonOnClick(){
+    let newGridSize = prompt("Enter new grid size:", 16);
+    /*
+    switch(newGridSize){
+        case newGridSize > 128:
+            return
+        case newGridSize < 1:
+            return
+        case typeof newGridSize != typeof 1:
+            return
+    }
+    */
+    setNewGridSize(newGridSize);
+}
+
+function addOnClickEventToChangeGridButton(onClickFunction){
+    const changeGridButton = document.querySelector(".change-grid");
+    changeGridButton.onclick = onClickFunction;
+}
+
+
+
 const container = document.querySelector(".container");
-addClickEventListenerToContainer(container);
-generateSquareGrid(32);
+addMouseoverEventListenerToContainer(container);
+addOnClickEventToChangeGridButton(buttonOnClick);
+generateSquareGrid(16)
