@@ -66,9 +66,32 @@ function addOnClickEventToChangeGridButton(onClickFunction){
     changeGridButton.onclick = onClickFunction;
 }
 
+function addOnClickEventToButton(onClickFunction, buttonsClass){
+    const button = document.querySelector(buttonsClass);
+    changeGridButton.onclick = onClickFunction;
+}
+
+function addButtonEventListenersToUI () {
+    const ui = document.querySelector(".UI");
+    ui.addEventListener('click', (event) => {
+        if(event.target.classList.contains("reset-grid")) {
+            const currentGridSize = getGridSize();
+            setNewGridSize(currentGridSize);
+        }
+        if(event.target.classList.contains("change-grid")) {
+            newGridButtonOnClick();
+        }
+    });
+}
+
+function getGridSize() {
+    const container = document.querySelector(".container");
+    return Math.sqrt(container.childElementCount); 
+}
 
 
 const container = document.querySelector(".container");
 addMouseoverEventListenerToContainer(container);
-addOnClickEventToChangeGridButton(newGridButtonOnClick);
+addButtonEventListenersToUI ()
+//addOnClickEventToChangeGridButton(newGridButtonOnClick);
 generateSquareGrid(16)
