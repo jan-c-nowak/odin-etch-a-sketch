@@ -44,18 +44,20 @@ function setNewGridSize(newSize){
 
 
 
-function buttonOnClick(){
+function newGridButtonOnClick(){
     let newGridSize = prompt("Enter new grid size:", 16);
-    /*
-    switch(newGridSize){
-        case newGridSize > 128:
-            return
-        case newGridSize < 1:
-            return
-        case typeof newGridSize != typeof 1:
-            return
+
+    if(newGridSize > 128) {
+        alert("Max size is 128. The size will be now set to 128x128.");
+        newGridSize = 128;
     }
-    */
+
+    if(newGridSize < 1) {
+        alert("Min size is 1. The size will be now set to 1x1.");
+        newGridSize = 1;
+    }
+
+    
     setNewGridSize(newGridSize);
 }
 
@@ -68,5 +70,5 @@ function addOnClickEventToChangeGridButton(onClickFunction){
 
 const container = document.querySelector(".container");
 addMouseoverEventListenerToContainer(container);
-addOnClickEventToChangeGridButton(buttonOnClick);
+addOnClickEventToChangeGridButton(newGridButtonOnClick);
 generateSquareGrid(16)
