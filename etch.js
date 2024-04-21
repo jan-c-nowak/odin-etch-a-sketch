@@ -2,20 +2,23 @@ function calculateGridElementSize(gridSideLength) {
     return (1/gridSideLength)*100; //returns in % container width
 }
 
-function styleGridElement(gridElement, relativeGridElemWidth){
-    gridElement.setAttribute('class', "grid-element");
+function styleGridElement(gridElement, relativeGridElemWidth, classes){
+    classes.forEach(element => {
+        gridElement.classList.add(element);
+    });
+    
     gridElement.style.flexBasis = `${relativeGridElemWidth}%`;
     gridElement.style.height = `${relativeGridElemWidth}%`;
 }
 
-function generateSquareGrid(gridSideLength){
+function generateSquareGrid(gridSideLength, classes=['grid-element']){
     const container = document.querySelector(".container");
     const relativeGridElemWidth = calculateGridElementSize(gridSideLength) - 0.16; //0.2 comes from grid-element 0.1% margin 
 
     for(let i=0; i < gridSideLength * gridSideLength; i++){
         let gridElement = document.createElement("div");
 
-        styleGridElement(gridElement, relativeGridElemWidth);
+        styleGridElement(gridElement, relativeGridElemWidth, classes);
         
         
         
@@ -23,10 +26,29 @@ function generateSquareGrid(gridSideLength){
     }
 }
 
-function addMouseoverEventListenerToContainer(container){
+function getRandomInt(max) {
+    return Math.floor(Math.random() * max);
+}
+
+function generateRandomRGB(){
+    let R = getRandomInt(256);
+    let B = getRandomInt(256);
+    let G = getRandomInt(256);
+    return `rgb(${R},${G},${B})`
+}
+
+function addMouseoverEventListenerToContainer(){
+    const container = document.querySelector(".container");
     container.addEventListener('mouseover', (event) => {
         if(event.target.classList.contains("container")) {return;}
-        event.target.style.backgroundColor = "gray";
+        
+        if(event.target.classList.contains("random-colors")){
+            event.target.style.backgroundColor = generateRandomRGB();
+        }
+
+        else{
+            event.target.style.backgroundColor = "gray";
+        }
     });
 }
 
@@ -37,9 +59,9 @@ function deleteExistingGrid(){
     gridElements.forEach((el) => {container.removeChild(el);});
 }
 
-function setNewGridSize(newSize){
+function setNewGridSize(newSize, classes){
     deleteExistingGrid();
-    generateSquareGrid(newSize);
+    generateSquareGrid(newSize, classes);
 }
 
 
@@ -56,30 +78,36 @@ function newGridButtonOnClick(){
         alert("Min size is 1. The size will be now set to 1x1.");
         newGridSize = 1;
     }
-
-    
-    setNewGridSize(newGridSize);
+    setNewGridSize(newGridSize, ['grid-element']);
 }
 
-function addOnClickEventToChangeGridButton(onClickFunction){
-    const changeGridButton = document.querySelector(".change-grid");
-    changeGridButton.onclick = onClickFunction;
+function colorfulGridButtonOnClick(){
+    setNewGridSize(getGridSize(),['grid-element','random-colors']);
 }
 
-function addOnClickEventToButton(onClickFunction, buttonsClass){
-    const button = document.querySelector(buttonsClass);
-    changeGridButton.onclick = onClickFunction;
+function resetGridOnClick() {
+    const currentGridSize = getGridSize();
+    setNewGridSize(currentGridSize);
 }
+
+function isRandomColors() {
+    const testGridElement = document.querySelector(".random-colors");
+    return testGridElement == null ? false : true; 
+}
+
+//UI Buttons handler
 
 function addButtonEventListenersToUI () {
     const ui = document.querySelector(".UI");
     ui.addEventListener('click', (event) => {
         if(event.target.classList.contains("reset-grid")) {
-            const currentGridSize = getGridSize();
-            setNewGridSize(currentGridSize);
+            resetGridOnClick();
         }
         if(event.target.classList.contains("change-grid")) {
             newGridButtonOnClick();
+        }
+        if(event.target.classList.contains("colorful-grid")){
+            isRandomColors() ? resetGridOnClick() : colorfulGridButtonOnClick();
         }
     });
 }
@@ -89,9 +117,10 @@ function getGridSize() {
     return Math.sqrt(container.childElementCount); 
 }
 
+function EtchASketch() {
+    addMouseoverEventListenerToContainer();
+    addButtonEventListenersToUI();
+    generateSquareGrid(16);
+}
 
-const container = document.querySelector(".container");
-addMouseoverEventListenerToContainer(container);
-addButtonEventListenersToUI ()
-//addOnClickEventToChangeGridButton(newGridButtonOnClick);
-generateSquareGrid(16)
+EtchASketch();
